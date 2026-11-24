@@ -153,6 +153,7 @@ def check_directory(
             root_dir=target,
             baseline_path=baseline_path,
             secret_key=secret_key,
+            extra_excluded={json_out.resolve()} if json_out else None,
         )
     except (BaselineTamperedError, BaselineFormatError) as exc:
         console.print(f"[bold red]{exc}[/bold red]")

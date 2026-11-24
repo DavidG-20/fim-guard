@@ -36,10 +36,14 @@ def scan_directory(
                 continue
 
             rel_path = resolved.relative_to(root_resolved).as_posix()
-            st = entry.stat()
+            try:
+                st = entry.stat()
+                digest = hash_file_sha256(entry)
+            except OSError:
+                continue
             records[rel_path] = FileRecord(
                 path=rel_path,
-                sha256=hash_file_sha256(entry),
+                sha256=digest,
                 size=st.st_size,
                 mode=oct(stat.S_IMODE(st.st_mode)),
             )

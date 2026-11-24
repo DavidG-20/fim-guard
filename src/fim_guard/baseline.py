@@ -109,6 +109,7 @@ def check_integrity(
     baseline_path: Path,
     secret_key: str | None = None,
     ignored_dirs: set[str] | None = None,
+    extra_excluded: set[Path] | None = None,
 ) -> IntegrityReport:
     """Verify baseline signature and compare current files against recorded hashes."""
     baseline, body = load_baseline(baseline_path)
@@ -126,9 +127,10 @@ def check_integrity(
     else:
         signature_status = "unsigned"
 
+    excluded = {baseline_path} | (extra_excluded or set())
     current_files = scan_directory(
         root_dir=root_dir,
-        exclude_paths={baseline_path},
+        exclude_paths=excluded,
         ignored_dirs=ignored_dirs,
     )
 
